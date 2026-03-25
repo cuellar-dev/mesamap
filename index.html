@@ -1,0 +1,459 @@
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>MesaMap</title>
+        <meta name="description" content="Descubre dónde comer en Sancti Spíritus. Mapa minimalista de restaurantes, bares y cafeterías.">
+        <meta name="author" content="Luis Cuellar">
+        <meta name="theme-color" content="#FF6347">
+        <meta property="og:title" content="MesaMap - Guía Gastronómica ">
+        <meta property="og:description" content="Encuentra donde disfrutar de tu próxima comida en el mapa más ligero y rápido.">
+        <meta property="og:image" content="https://tudominio.com/img/preview-dark.webp">
+        <meta property="og:url" content="https://tudominio.com">
+        <meta name="color-scheme" content="dark">
+        <meta property="og:type" content="website">
+        <link rel="icon" href="favicon.svg" type="image/svg+xml">
+        <link rel="stylesheet" href="Css/style.css" />  
+        <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+        <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    </head>
+    <body>
+        <header>
+            <aside id="hamburguesa-menu" aria-hidden="true">
+                <ul id="hamb-menu-ul">
+                    <li class="li-hamb-menu" id="li1"><a class="a-hamb-menu" href="#sugerir-negocio">Faltó algún lugar ?</a></li>
+                    <li class="li-hamb-menu" id="li2"><a class="a-hamb-menu" href="#tipos-de-precio">Tipos de Precios</a></li>
+                    <li class="li-hamb-menu" id="li5"><a class="a-hamb-menu" href="#sobre-mesamap">Sobre MesaMap</a></li>
+                    <li class="li-hamb-menu" id="li3"><a class="a-hamb-menu" href="#section-contact">Contacto</a></li>
+                    
+                </ul>
+            </aside>
+            <button id="menu-toggle" aria-label="Abrir menú" aria-controls="hamburguesa-menu" aria-expanded="false"> 
+                    <svg class="menu-icon" width="50px" height="50px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect class="bar-top" x="2" y="5" width="20" height="2" rx="1.25" fill="#fa1010"/>
+                        <rect class="bar-mid" x="2" y="11" width="20" height="2" rx="1.25" fill="#fa1010"/>
+                        <rect class="bar-bot" x="2" y="17" width="20" height="2" rx="1.25" fill="#fa1010"/>
+                    </svg>
+                </button>
+            <nav>
+                <h1><span class="resaltar">Mesa</span>Map</h1>
+            </nav>    
+        </header>
+            <div id="map" role="region" aria-label="Mapa de locales gastronómicos"><div class="map-overlay">
+            <div id="form-container">
+            <div class="pc-legend-container" aria-label="Leyenda de tipos de locales">
+                <div class="pc-legend-item"><span class="pc-legend-dot" style="background-color: #C5E1A5;"></span>Restaurantes</div>
+                <div class="pc-legend-item"><span class="pc-legend-dot" style="background-color: #70D6FF;"></span>Bares</div>
+                <div class="pc-legend-item"><span class="pc-legend-dot" style="background-color: #FFB370;"></span>Cafeterías</div>
+                <div class="pc-legend-item"><span class="pc-legend-dot" style="background-color: #FF7070;"></span>Pizzerías</div>
+                <div class="pc-legend-item"><span class="pc-legend-dot" style="background-color: #FF97E1;"></span>Heladerías</div>
+            </div>
+            <div id="search-wrapper">
+            <form role="search" class="search-form" autocomplete="off">
+                <label for="search-input" class="hidden">Buscar lugar</label>
+                <input id="search-input" type="search" placeholder="Busque un lugar especifico..." autocomplete="off">
+                <button id="search-button" type="submit" aria-label="Buscar">
+                    <svg width="50" height="50" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="10.5" cy="10.5" r="6.5" stroke="#eee" stroke-linejoin="round" fill="none"/>
+                        <path d="M20.3536 19.6464L15.3536 14.6464L14.6464 15.3536L19.6464 20.3536L20.3536 19.6464Z" fill="#eee"/>
+                    </svg>
+                </button>
+            </form>
+            <div id="busqueda">
+                <ul id="ul-busqueda" aria-live="polite"></ul>
+            </div>
+            </div>
+            <div id="option-container">
+                <div class="leyend" id="tuerca" role="button" tabindex="0" aria-label="Mostrar opciones rápidas" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(238, 238, 238)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bolt-icon lucide-bolt"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><circle cx="12" cy="12" r="4"/></svg>
+                </div>
+                <div class="leyend leyend-slider" id="filtros-boton" role="button" tabindex="0" aria-label="Abrir filtros" aria-controls="filtros" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eee" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sliders-horizontal-icon lucide-sliders-horizontal"><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></svg>
+                </div>
+                <div class="leyend leyend-slider" id="leyenda-boton" role="button" tabindex="0" aria-label="Abrir leyenda" aria-controls="leyenda-panel" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eee" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-icon lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg>
+                </div>
+                <div class="leyend leyend-slider" id="localizar" role="button" tabindex="0" aria-label="Localizar mi posición en el mapa">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eee" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-locate-fixed-icon lucide-locate-fixed"><line x1="2" x2="5" y1="12" y2="12"/><line x1="19" x2="22" y1="12" y2="12"/><line x1="12" x2="12" y1="2" y2="5"/><line x1="12" x2="12" y1="19" y2="22"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+            </div>
+            <div id="filtros" aria-hidden="true">
+                <h3 id="h3-filtros">Filtre su busqueda por: </h3>
+                <div id="filtrar-busqueda">
+                    <h4 class="h4-filtros">Solo: </h4>
+                    <form action="filtrar" class="form-solo-filtros">
+                        <div class="div-tipo-filtros">
+                            <label class="filtro-opcion">
+                                <input class="input-circ-filtros" type="checkbox" name="tipo" value="cafeteria">
+                                <span class="texto-inputs">Cafeterias</span>
+                            </label>
+                            <label class="filtro-opcion">
+                                <input class="input-circ-filtros" type="checkbox" name="tipo" value="bar">
+                                <span class="texto-inputs">Bares</span>
+                            </label>
+                            <label class="filtro-opcion">
+                                <input class="input-circ-filtros" type="checkbox" name="tipo" value="restaurante">
+                                <span class="texto-inputs">Restaurantes</span>
+                            </label>
+                            <label class="filtro-opcion">
+                                <input class="input-circ-filtros" type="checkbox" name="tipo" value="heladeria">
+                                <span class="texto-inputs">Heladerias</span>
+                            </label>
+                            <label class="filtro-opcion">
+                                <input class="input-circ-filtros" type="checkbox" name="tipo" value="pizzeria">
+                                <span class="texto-inputs">Pizzerias</span>
+                            </label>
+                            <label class="filtro-opcion">
+                                <input class="input-circ-filtros" type="checkbox" name="tipo" value="todos">
+                                <span class="texto-inputs">Todos</span>
+                            </label>
+                        </div>
+                        <div class="div-extra-filtros">
+                            <label class="filtro-opcion extra-opcion" id="abierto-ahora-filtros">
+                                <input class="input-circ-filtros input-extra-filtros" type="checkbox" name="extra" value="abierto">
+                                <span class="extra-pill">
+                                    <span class="extra-icon" aria-hidden="true">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 2.5"/></svg>
+                                    </span>
+                                    <span class="texto-inputs texto-inputs-extra">Abiertos ahora</span>
+                                </span>
+                            </label>
+                            <label class="filtro-opcion extra-opcion" id="transferencia-filtros">
+                                <input class="input-circ-filtros input-extra-filtros" type="checkbox" name="extra" value="transferencia">
+                                <span class="extra-pill">
+                                    <span class="extra-icon" aria-hidden="true">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="M3 10h18"/><path d="M7 15h4"/></svg>
+                                    </span>
+                                    <span class="texto-inputs texto-inputs-extra">Transferencia</span>
+                                </span>
+                            </label>
+                            <label class="filtro-opcion extra-opcion" id="domicilio-filtros">
+                                <input class="input-circ-filtros input-extra-filtros" type="checkbox" name="extra" value="domicilio">
+                                <span class="extra-pill">
+                                    <span class="extra-icon" aria-hidden="true">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>
+                                    </span>
+                                    <span class="texto-inputs texto-inputs-extra">Domicilios</span>
+                                </span>
+                            </label>
+                        </div>
+                    </form>
+                    <h4 class="h4-filtros">Buscar por: </h4>
+                    <div class="contenedor-modos">
+                        <label class="modo-chip">
+                            <input type="radio" name="modo-busqueda" value="nombre" checked>
+                            <span class="chip-label">Nombre</span>
+                        </label>
+                        <label class="modo-chip">
+                            <input type="radio" name="modo-busqueda" value="calle">
+                            <span class="chip-label">Calle</span>
+                        </label>
+                        <label class="modo-chip modo-chip-bloqueado">
+                            <span class="coming-soon-tag">Coming soon</span>
+                            <input type="radio" name="modo-busqueda" value="producto" disabled aria-disabled="true">
+                            <span class="chip-label">Producto</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+        </div>
+        <div id="info-overlay" class="info-overlay" aria-hidden="true"></div>
+        <div id="image-lightbox" aria-hidden="true" role="dialog" aria-label="Vista completa de imagen">
+            <img id="image-lightbox-img" src="" alt="Imagen ampliada del local">
+        </div>
+        <aside id="leyenda-panel" aria-hidden="true">
+            <button id="cerrar-leyenda" aria-label="Cerrar leyenda">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <h3 id="leyenda-titulo">Leyenda de Tipos</h3>
+            <ul id="leyenda-lista"></ul>
+            <p id="leyenda-nota">
+                Nota: muchos locales, aunque se clasifiquen como un tipo principal (bar, cafeteria, etc.), pueden ofrecer servicios secundarios de otros tipos.
+            </p>
+        </aside>
+        <aside id="info-place" class="desactive-info-place">
+            <div id="imagen-local" aria-label="Imagen del local">
+                <h2 id="nombre-local">EJEMPLO BAR</h2>
+                <p id="type-local">Bar-Cafeteria</p>
+            </div>
+            <div id="info-local">
+                <p id="state"     class="info-local-hijos">ABIERTO</p>
+                <div id="horario-container"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock-icon lucide-clock"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><p id="horario" class="info-local-hijos">9PM-2AM</p></div>
+                <div id="costo-container"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote-icon lucide-banknote"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg><p id="costo"     class="info-local-hijos">$$$</p></div>
+                <div id="direccion-container"><p id="direccion" class="info-local-hijos">Calle San Alberto New, entre Marti y Cespedez #45</p></div>
+            </div>
+            <div id="description-local" aria-label="Descripción del local"><p id="text-description-local">Esto es un texto de prueba de descripción del local, porque con el lorem esto se ve medio raro asi que intente hacerlo yo con palabras en español para ver si era que estaba mal yo y no el lorem</p></div>
+            <div id="galeria-info-place">
+                <button id="btn-pre-galeria" class="btn-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eee" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left-icon lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></button>
+                <div id="track-galeria">
+                    <div class="slide previa"></div>
+                    <div class="slide activa"></div>
+                    <div class="slide desp"></div>
+                </div>
+                <button id="btn-sig-galeria" class="btn-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eee" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>
+            </div>
+            <div id="contacto-local">
+                <div id="contacto-local-main">
+                    <a id="llamar" href="tel:+5355555555"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone-icon lucide-phone"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg> Llamar</a>
+                    <a id="whatsapp" href="" aria-label="Contactar por WhatsApp"> <svg width="64" height="64" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path 
+        fill="#aaa" 
+        d="M26.576 5.363c-2.69-2.69-6.406-4.354-10.511-4.354-8.209 0-14.865 6.655-14.865 14.865 0 2.732 0.737 5.291 2.022 7.491l-0.038-0.070-2.109 7.702 7.879-2.067c2.051 1.139 4.498 1.809 7.102 1.809h0.006c8.209-0.003 14.862-6.659 14.862-14.868 0-4.103-1.662-7.817-4.349-10.507zM16.062 28.228h-0.005c-2.319 0-4.489-0.64-6.342-1.753l0.056 0.031-0.451-0.267-4.675 1.227 1.247-4.559-0.294-0.467c-1.185-1.862-1.889-4.131-1.889-6.565 0-6.822 5.531-12.353 12.353-12.353s12.353 5.531 12.353 12.353c0 6.822-5.53 12.353-12.353 12.353zM22.838 18.977c-0.371-0.186-2.197-1.083-2.537-1.208-0.341-0.124-0.589-0.185-0.837 0.187-0.246 0.371-0.958 1.207-1.175 1.455-0.216 0.249-0.434 0.279-0.805 0.094-1.15-0.466-2.138-1.087-2.997-1.852l0.010 0.009c-0.799-0.74-1.484-1.587-2.037-2.521l-0.028-0.052c-0.216-0.371-0.023-0.572 0.162-0.757 0.167-0.166 0.372-0.434 0.557-0.65 0.146-0.179 0.271-0.384 0.366-0.604l0.006-0.017c0.043-0.087 0.068-0.188 0.068-0.296 0-0.131-0.037-0.253-0.101-0.357-0.094-0.186-0.836-2.014-1.145-2.758-0.302-0.724-0.609-0.625-0.836-0.637-0.216-0.010-0.464-0.012-0.712-0.012-0.395 0.010-0.746 0.188-0.988 0.463l-0.001 0.002c-0.802 0.761-1.3 1.834-1.3 3.023 0 0.026 0 0.053 0.001 0.079 0.131 1.467 0.681 2.784 1.527 3.857 1.604 2.379 3.742 4.282 6.251 5.564l0.094 0.043c0.548 0.248 1.25 0.513 1.968 0.74l0.149 0.041c0.442 0.14 0.951 0.221 1.479 0.221 0.303 0 0.601-0.027 0.889-0.078 1.069-0.223 1.956-0.868 2.497-1.749l0.009-0.017c0.165-0.366 0.261-0.793 0.261-1.242 0-0.185-0.016-0.366-0.047-0.542-0.092-0.155-0.34-0.247-0.712-0.434z"
+    />
+</svg> WhatsApp</a>
+                </div>
+                <a id="reportar-dato" href="#" aria-label="Reportar dato incorrecto del local">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.2a2 2 0 0 1 3.4 0l7 12.1a2 2 0 0 1-1.7 3H5a2 2 0 0 1-1.7-3Z"/><path d="M12 9v4"/><path d="M12 16h.01"/></svg>
+                    Reportar dato
+                </a>
+            </div>
+    <div id="stats-local">
+        <div class="stat-item" data-tooltip="Climatizado">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-snowflake-icon lucide-snowflake"><path d="m10 20-1.25-2.5L6 18"/><path d="M10 4 8.75 6.5 6 6"/><path d="m14 20 1.25-2.5L18 18"/><path d="m14 4 1.25 2.5L18 6"/><path d="m17 21-3-6h-4"/><path d="m17 3-3 6 1.5 3"/><path d="M2 12h6.5L10 9"/><path d="m20 10-1.5 2 1.5 2"/><path d="M22 12h-6.5L14 15"/><path d="m4 10 1.5 2L4 14"/><path d="m7 21 3-6-1.5-3"/><path d="m7 3 3 6h4"/></svg>
+        </div>
+
+        <div class="stat-item" data-tooltip="Domicilio">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bike-icon lucide-bike"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>
+        </div>
+
+        <div class="stat-item" data-tooltip="Música en Vivo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-music-icon lucide-music"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </div>
+
+        <div class="stat-item" data-tooltip="Terraza">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tree-pine-icon lucide-tree-pine"><path d="m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z"/><path d="M12 22v-3"/></svg>
+        </div>
+
+        <div class="stat-item" data-tooltip="Zona Fumadores">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cigarette-icon lucide-cigarette"><path d="M17 12H3a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h14"/><path d="M18 8c0-2.5-2-2.5-2-5"/><path d="M21 16a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M22 8c0-2.5-2-2.5-2-5"/><path d="M7 12v4"/></svg>
+        </div>
+    </div>
+    <h3 class="h3-local-int">Quizas le interese: </h3>
+    <div id="int-local">
+    </div>
+        </aside>
+    <section id="sugerir-negocio">
+        <div class="header-sugerir">
+        <h2 class="titulos-h2">Sugiera un Negocio</h2>
+        <p class="text-top">Si cree que nos falta algún lugar, ayúdenos rellenando estos datos para agregarlo pronto.</p>
+        </div>
+
+        <form action="" id="nuevo-neg-form" novalidate autocomplete="off">
+        <input type="text" name="website" class="hp-field" autocomplete="off" tabindex="-1" aria-hidden="true">
+        <div class="input-container">
+            <label for="nombre-newlocal">Nombre del Lugar</label>
+            <input type="text" id="nombre-newlocal" name="nombre" class="input-nuevo-local" placeholder="Ej: Bar Julito" autocomplete="off" minlength="2" maxlength="60" required>
+        </div>
+        <div class="input-container">
+            <label for="addres-newlocal">Dirección del Lugar</label>
+            <input type="text" id="addres-newlocal" name="direccion" class="input-nuevo-local" placeholder="Calle, entre X e Y" autocomplete="off" minlength="5" maxlength="140" required>
+        </div>
+            <div class="input-container">
+                <label for="textarea-newlocal">¿Por qué debería estar en MesaMap? (Opcional)</label>
+                <textarea id="textarea-newlocal" name="motivo" class="input-nuevo-local" placeholder="Cuéntanos un poco..." minlength="8" maxlength="900"></textarea>
+            </div>
+            <button type="submit" id="btn-enviar-sugerencia">
+                Enviar Sugerencia
+            </button>
+            <p id="feedback-sugerencia" class="form-feedback" aria-live="polite"></p>
+        </form>
+    </section>
+    <section id="tipos-de-precio">
+        <h2 class="titulos-h2">Guía de Precios</h2>
+        <p class="text-intro">En MesaMap queremos ser transparentes. Aquí te explicamos cómo clasificamos cada lugar para que elijas según tu presupuesto.</p>
+    <div class="price-legend-container">
+        <h3 class="subtitulo">Categorías</h3>
+        <div class="price-row">
+            <span class="price-symbol">$</span>
+            <div class="price-info">
+                <strong>Económico</strong>
+                <span class="rango-ejemplo">Rango aprox: 150 - 600 CUP</span>
+            </div>
+        </div>
+        <div class="price-row">
+            <span class="price-symbol">$$</span>
+            <div class="price-info">
+                <strong>Moderado</strong>
+                <span class="rango-ejemplo">Rango aprox: 600 - 1500 CUP</span>
+            </div>
+        </div>
+        <div class="price-row">
+            <span class="price-symbol">$$$</span>
+            <div class="price-info">
+                <strong>Elevado</strong>
+                <span class="rango-ejemplo">Rango aprox: +1500 CUP</span>
+            </div>
+        </div>
+        
+        <p class="nota-rango">
+            <small>* El rango (ej: 150-1500) indica el precio del plato más barato vs. el más caro del menú.</small>
+        </p>
+    </div>
+
+    <div class="criteria-section">
+        <h3 class="subtitulo">Nuestro Criterio</h3>
+        <p class="text-intro">No es al azar. Analizamos cada local basándonos en:</p>
+        <div class="criteria-grid">
+            <div class="criteria-card">
+                <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eee" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-column-icon lucide-chart-column"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></div>
+                <h4>Promedio</h4>
+                <p>Calculamos la media de precios de los platos fuertes y bebidas de la carta.</p>
+            </div>
+
+            <div class="criteria-card">
+                <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eee" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scale-icon lucide-scale"><path d="M12 3v18"/><path d="m19 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1"/><path d="m5 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M7 21h10"/></svg></div>
+                <h4>Comparativa</h4>
+                <p>Comparamos el precio de productos estándar (ej: una cerveza o un café) entre diferentes locales.</p>
+            </div>
+
+            <div class="criteria-card">
+                <div class="card-icon">📍</div>
+                <h4>Experiencia Local</h4>
+                <p>Como espirituanos, conocemos el mercado. En casos reñidos, aplicamos nuestro conocimiento de la zona.</p>
+            </div>
+        </div>
+    </div>
+    <div class="disclaimer-box">
+        <p><strong>⚠️ Importante:</strong> El precio es una guía de presupuesto, no un indicador de calidad. Un lugar económico puede ser delicioso y uno costoso no garantiza perfección. ¡La elección final es tuya!</p>
+    </div>
+</section>
+    <div id="busqueda-calles" aria-hidden="true">
+        <div id="busqueda-calles-header">
+            <p id="text-busqueda-calles">Resultados para: <span id="texto-calle-buscada"></span></p>
+            <button id="cerrar-busqueda-calles" aria-label="Cerrar búsqueda por calles">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <ul id="ul-busqueda-calles" aria-live="polite"></ul>
+    </div>
+    <section id="sobre-mesamap" class="about-dynamic">
+    <div class="about-dynamic-grid"> 
+        <div class="about-dynamic-header">
+            <h2 class="about-dynamic-title">Nuestra Historia</h2>
+            <div class="title-underline"></div>
+        </div> 
+        <div id="contenedor-demierda">
+        <article class="about-card card-origin">
+            <div class="card-icon">📍</div>
+            <p>
+                MesaMap no nació en una oficina, ni en nada sofisticado, fue hecho desde el gao y es estrictamente para <strong>Sancti Spíritus</strong> (O al menos hasta hoy).
+            </p>
+            <p>
+                La idea sale por esa frustración clásica de todo espirituano de no tener a donde salir. Pues pensé que simplemente no conocemos todas las opciones o quizás realmente no hay donde salir... ya lo habrás comprobado.
+            </p>
+        </article>
+
+        <article class="about-card card-creation">
+            <div class="card-icon">💻</div>
+            <p>
+                Como te decía, esto está hecho por una sola persona, pero con idea y ayuda de varias, de forma indirecta, tanto en ideas, como en simplemente apoyo. Si estás leyendo esto significa que continué con el proyecto y todo salió bien.
+            </p>
+        </article>
+
+        <article class="about-card card-feedback">
+            <div class="card-icon">📣</div>
+            <p>
+                Por tanto y demás, si te gustó, en lo más mínimo, déjamelo saber en la próxima sección. Todo comentario ayudará. Espero que te haya servido esta web y un placer tenerte por aquí.
+            </p>
+        </article>
+        </div>
+        <div class="about-badge-dynamic">MADE IN CUBA</div>
+
+    </div>
+</section>
+
+    <section id="section-contact">
+    <div class="header-contacto">
+        <h2 id="h2-contact" class="titulos-h2">Contacto</h2>
+        <p class="text-top">Escríbenos lo que necesites. Selecciona el tema y verás cómo el formulario se adapta para guiarte.</p>
+    </div>
+    <div id="forms-contact">
+        <form id="contact-form" action="" novalidate autocomplete="off">
+            <input type="text" name="website" class="hp-field" autocomplete="off" tabindex="-1" aria-hidden="true" style="display:none;">
+            
+            <div class="contact-grid-inputs">
+                <label class="label-contact">
+                    <span class="label-text">Nombre</span>
+                    <input type="text" id="input-nombre-contact" name="nombre" class="input-nombre-cont-1" placeholder="Ej: Luis Cuellar" autocomplete="off" minlength="2" maxlength="60" required>
+                </label>
+                <label class="label-contact">
+                    <span class="label-text">Mail</span>
+                    <input type="email" id="input-email-contact" name="email" class="input-nombre-cont-1" placeholder="ejemplo@correo.com" autocomplete="off" maxlength="120" required>
+                </label>
+            </div>
+
+            <div class="message-area-wrapper">
+                
+                <div id="hidden-topics" style="display: none;">
+                    <input type="radio" name="contact-topic" value="queja" data-tone="#fa1010" data-placeholder="Diganos qué sucede y haremos lo posible por arreglarlo" data-label="Tiene alguna queja ?" checked>
+                    <input type="radio" name="contact-topic" value="sugerencia" data-tone="#fa8110" data-placeholder="Compártenos tu idea para mejorar MesaMap en próximas versiones" data-label="Quizas una sugerencia">
+                    <input type="radio" name="contact-topic" value="negocio" data-tone="#17a34a" data-placeholder="Que bien que te guste!! Dime... que te impresionó de nuestra web" data-label="Una buena opinión">
+                    <input type="radio" name="contact-topic" value="otro" data-tone="#4b7bec" data-placeholder="Escribe tu mensaje con total libertad. Te responderemos pronto." data-label="O alguna otra intencion">
+                </div>
+
+                <div class="topic-carousel" id="topic-carousel">
+                    <button type="button" id="btn-prev-topic" class="carousel-arrow" aria-label="Tema anterior">
+                        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    
+                    <div class="carousel-content">
+                        <span class="topic-title-small">A qué debemos su mensaje</span>
+                        <span id="carousel-topic-label" class="topic-current-label">Tiene alguna queja ?</span>
+                    </div>
+
+                    <button type="button" id="btn-next-topic" class="carousel-arrow" aria-label="Tema siguiente">
+                        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                </div>
+
+                <textarea id="input-mensaje-contact" name="mensaje" placeholder="Cuéntanos qué pasó, dónde ocurrió y cómo podemos ayudarte." minlength="12" maxlength="1400" required></textarea>
+            </div>
+
+            <button type="submit" id="btn-enviar-contacto">Enviar Mensaje</button>
+            <p id="feedback-contacto" class="form-feedback" aria-live="polite"></p>
+
+            <div class="contact-via-rapida" aria-label="Vias rapidas de contacto">
+                <p class="contact-via-title">Contacto directo</p>
+                <div class="contact-via-links">
+                    <a href="https://wa.me/+5351354067" target="_blank" rel="noopener noreferrer" class="contact-via-link contact-via-wa" aria-label="Escribir por WhatsApp">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path fill="currentColor" d="M20.5 3.5A11.8 11.8 0 0 0 12.06.02C5.49.02.13 5.4.12 11.98A11.9 11.9 0 0 0 1.7 17.8L0 24l6.35-1.66a11.89 11.89 0 0 0 5.69 1.45h.01c6.57 0 11.94-5.38 11.95-11.98a11.9 11.9 0 0 0-3.5-8.31ZM12.05 21.77h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.77.99 1-3.68-.24-.38a9.93 9.93 0 0 1-1.53-5.3C2.11 6.35 6.54 1.99 12.06 2c2.65 0 5.14 1.03 7.01 2.9a9.83 9.83 0 0 1 2.92 7c0 5.53-4.43 9.88-9.94 9.88Zm5.45-7.42c-.3-.15-1.8-.89-2.07-1-.28-.1-.48-.15-.68.15-.2.3-.78.99-.96 1.19-.18.2-.35.23-.65.08a8.08 8.08 0 0 1-2.37-1.46 8.96 8.96 0 0 1-1.65-2.05c-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.68-1.64-.93-2.25-.24-.58-.48-.5-.67-.5h-.57c-.2 0-.52.08-.8.38-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.09 4.49.71.3 1.27.48 1.7.61.71.23 1.36.2 1.88.12.58-.09 1.8-.73 2.05-1.43.25-.7.25-1.3.17-1.43-.07-.12-.27-.2-.57-.35Z"/>
+                        </svg>
+                    </a>
+                    <a href="mailto:luisernesto.cuellar164@gmail.com" class="contact-via-link contact-via-mail" aria-label="Enviar correo Gmail">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Zm0 1.2L12 13l8-5.8"/>
+                        </svg>
+                    </a>
+                    <a href="https://t.me/+5351354067" target="_blank" rel="noopener noreferrer" class="contact-via-link contact-via-telegram" aria-label="Abrir Telegram">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path fill="currentColor" d="M21.95 3.24a1.3 1.3 0 0 0-1.35-.23L2.55 10.06a1.15 1.15 0 0 0 .06 2.16l4.27 1.42 1.63 5.5a1.2 1.2 0 0 0 2.14.35l2.42-3.12 4.2 3.08a1.48 1.48 0 0 0 2.3-.85l2.41-13.9a1.3 1.3 0 0 0-.33-1.46ZM9.1 17.33l-.93-3.16 8.78-7.2a.45.45 0 0 0-.56-.7l-10.7 6.5-2.36-.79L19.5 5.37l-1.99 11.5-4.11-3.02-.07-.04-.1-.06a1.25 1.25 0 0 0-1.48.27L9.1 17.33Z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+    <footer class="footer-animado">
+    <div class="footer-background-overlay"></div> 
+    <div class="footer-content">
+        <div class="footer-section sobre-mesa">
+            <h3 class="h3-footer">MesaMap</h3>
+            <p class="p-footer">Creado con 🧡 desde la Casita, Sancti Spíritus.</p>
+        </div>
+        <div class="footer-section copyright">
+            <a class="footer-link" href="privacy.html">Privacidad</a>
+            <p class="p-footer-copy">&copy; 2026 MesaMap. v1.0.0 - Beta</p>
+            <p class="p-footer-autor">By Yo</p>
+            
+        </div>
+    </div>
+</footer>
+    </body>
+    <script src="Js/script.js"></script>
+</html>

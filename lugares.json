@@ -1,0 +1,135 @@
+[  
+  {
+    "id": 1,
+    "nombre": "El Cuervo",
+    "tipo": "Bar-Cafeteria",
+    "tipoReal": "cafeteria",
+    "descripcion": "Un lugar sabroso bonito super chulo de lo más bello y mas texto de relleno para probar como se ve el texto en la app.",
+    "direccion": "Calle Máximo Gómez #15, e/ Independencia y Castillo",
+    "coordenadas": [-79.44189588038344, 21.92618670230962],
+    "precios": {
+      "categoria": "$",
+      "rango": "150 - 1500",
+      "moneda": "CUP"
+    },
+    "analisis": {
+      "promedio": 350,
+      "comparativa": "Precios competitivos en cervezas nacionales respecto al Bulevar.",
+      "insight": "Es un lugar super bien decorado con mucha atencion al detalle a pesar del tiempo"
+    },
+    "horario": {
+      "normal": "5:00PM-12:00AM",
+      "abre" : 17,
+      "cierra": 24
+    },
+    "amenidades": ["Aire Acondicionado", "Música", "No-Fumadores", "Domicilio","Transferencia"],
+    "imagen": "..//Imagenes/cuervo/IMG-20260310-WA0061.jpg",
+    "imagenes":["..//Imagenes/cuervo/IMG-20260310-WA0038.JPG","..//Imagenes/cuervo/IMG-20260310-WA0039.jpg","..//Imagenes/cuervo/IMG-20260310-WA0040.jpg","..//Imagenes/cuervo/IMG-20260310-WA0041.jpg","..//Imagenes/cuervo/IMG-20260310-WA0042.jpg","..//Imagenes/cuervo/IMG-20260310-WA0043.jpg","..//Imagenes/cuervo/IMG-20260310-WA0044.jpg","..//Imagenes/cuervo/IMG-20260310-WA0045.jpg","..//Imagenes/cuervo/IMG-20260310-WA0046.jpg","..//Imagenes/cuervo/IMG-20260310-WA0047.jpg","..//Imagenes/cuervo/IMG-20260310-WA0053.jpg","..//Imagenes/cuervo/IMG-20260310-WA0054.jpg","..//Imagenes/cuervo/IMG-20260310-WA0055.jpg","..//Imagenes/cuervo/IMG-20260310-WA0056.jpg","..//Imagenes/cuervo/IMG-20260310-WA0059.jpg","..//Imagenes/cuervo/IMG-20260310-WA0060.jpg","..//Imagenes/cuervo/IMG-20260310-WA0061.jpg"]
+  },
+  {
+    "id": 2,
+    "nombre": "Al Medio",
+    "tipo": "Bar-Restaurante",
+    "tipoReal": "restaurante",
+    "descripcion": "Un lugar sabroso bonito super chulo de lo más bello y mas texto de relleno para probar como se ve el texto en la app.",
+    "direccion": "Calle Máximo Gómez #15, e/ Independencia y Honorato",
+    "coordenadas": [-79.44314867084469, 21.92634518887421],
+    "precios": {
+      "categoria": "$$",
+      "rango": "250-3000",
+      "moneda": "CUP"
+    },
+    "analisis": {
+      "promedio": 350,
+      "comparativa": "Precios competitivos en cervezas nacionales respecto al Bulevar.",
+      "insight": "Es un lugar super bien decorado con mucha atencion al detalle a pesar del tiempo"
+    },
+    "horario": {
+      "normal": "10:30AM-8:00PM",
+      "abre" : 10,
+      "cierra": 20
+    },
+    "amenidades": ["Aire Acondicionado", "Música", "No-Fumadores", "Domicilio"],
+    "imagen": "blabla.webp",
+    "imagenes":["..//Imagenes/cuervo/IMG-20260310-WA0038.JPG","..//Imagenes/cuervo/IMG-20260310-WA0039.jpg","..//Imagenes/cuervo/IMG-20260310-WA0040.jpg","..//Imagenes/cuervo/IMG-20260310-WA0041.jpg","..//Imagenes/cuervo/IMG-20260310-WA0042.jpg","..//Imagenes/cuervo/IMG-20260310-WA0043.jpg","..//Imagenes/cuervo/IMG-20260310-WA0044.jpg","..//Imagenes/cuervo/IMG-20260310-WA0045.jpg","..//Imagenes/cuervo/IMG-20260310-WA0046.jpg"]
+  },
+  {
+    "id": 3,
+    "nombre": "El Sarandonga",
+    "tipo": "Bar-Cafeteria",
+    "tipoReal": "cafeteria",
+    "descripcion": "Un lugar sabroso bonito super chulo de lo más bello y mas texto de relleno para probar como se ve el texto en la app.",
+    "direccion": "Calle Máximo Gómez #15, e/ Independencia y Honorato",
+    "coordenadas": [-79.44221103482225, 21.92884239417015],
+    "precios": {
+      "categoria": "$",
+      "rango": "150 - 1500",
+      "moneda": "CUP"
+    },
+    "analisis": {
+      "promedio": 350,
+      "comparativa": "Precios competitivos en cervezas nacionales respecto al Bulevar.",
+      "insight": "Es un lugar super bien decorado con mucha atencion al detalle a pesar del tiempo"
+    },
+    "horario": {
+      "normal": "10:30AM-8:00PM",
+      "abre" : 10,
+      "cierra": 20
+    },
+    "amenidades": ["Aire Acondicionado", "Música", "No-Fumadores", "Domicilio"],
+    "imagen": "blabla.webp",
+    "imagenes":["..//Imagenes/cuervo/IMG-20260310-WA0038.JPG","..//Imagenes/cuervo/IMG-20260310-WA0039.jpg","..//Imagenes/cuervo/IMG-20260310-WA0040.jpg","..//Imagenes/cuervo/IMG-20260310-WA0041.jpg","..//Imagenes/cuervo/IMG-20260310-WA0042.jpg","..//Imagenes/cuervo/IMG-20260310-WA0043.jpg","..//Imagenes/cuervo/IMG-20260310-WA0044.jpg","..//Imagenes/cuervo/IMG-20260310-WA0045.jpg","..//Imagenes/cuervo/IMG-20260310-WA0046.jpg"]
+  },{
+    "id": 4,
+    "nombre": "Sabor Loco",
+    "tipo": "Heladeria",
+    "tipoReal": "heladeria",
+    "descripcion": "Un lugar sabroso bonito super chulo de lo más bello y mas texto de relleno para probar como se ve el texto en la app.",
+    "direccion": "Calle Sobral entre Carretera Central y Juancito Gomez, al lado de la estacion policial",
+    "coordenadas": [-79.43697047969506, 21.932944249524827],
+    "precios": {
+      "categoria": "$",
+      "rango": "150 - 1500",
+      "moneda": "CUP"
+    },
+    "analisis": {
+      "promedio": 350,
+      "comparativa": "Precios competitivos en cervezas nacionales respecto al Bulevar.",
+      "insight": "Es un lugar super bien decorado con mucha atencion al detalle a pesar del tiempo"
+    },
+    "horario": {
+      "normal": "5:00PM-12:00AM",
+      "abre" : 17,
+      "cierra": 24
+    },
+    "amenidades": ["Aire Acondicionado", "Música", "No-Fumadores","Transferencia"],
+    "imagen": "blabla.webp",
+    "imagenes":["..//Imagenes/cuervo/IMG-20260310-WA0038.JPG","..//Imagenes/cuervo/IMG-20260310-WA0039.jpg","..//Imagenes/cuervo/IMG-20260310-WA0040.jpg","..//Imagenes/cuervo/IMG-20260310-WA0041.jpg","..//Imagenes/cuervo/IMG-20260310-WA0042.jpg","..//Imagenes/cuervo/IMG-20260310-WA0043.jpg","..//Imagenes/cuervo/IMG-20260310-WA0044.jpg","..//Imagenes/cuervo/IMG-20260310-WA0045.jpg","..//Imagenes/cuervo/IMG-20260310-WA0046.jpg"]
+  },{
+    "id":5 ,
+    "nombre": "Itaka-Bar",
+    "tipo": "Bar",
+    "tipoReal": "bar",
+    "descripcion": "Un lugar sabroso bonito super chulo de lo más bello y mas texto de relleno para probar como se ve el texto en la app.",
+    "direccion": "Al pasar el puente Yayabo, Calle federico, entre ejemplo y no existe",
+    "coordenadas": [-79.44511753996733, 21.924042147983947],
+    "precios": {
+      "categoria": "$",
+      "rango": "150 - 1500",
+      "moneda": "CUP"
+    },
+    "analisis": {
+      "promedio": 350,
+      "comparativa": "Precios competitivos en cervezas nacionales respecto al Bulevar.",
+      "insight": "Es un lugar super bien decorado con mucha atencion al detalle a pesar del tiempo"
+    },
+    "horario": {
+      "normal": "5:00PM-12:00AM",
+      "abre" : 17,
+      "cierra": 24
+    },
+    "amenidades": ["Aire Acondicionado", "Música", "No-Fumadores", "Domicilio","Transferencia"],
+    "imagen": "blabla.webp",
+    "imagenes":["..//Imagenes/cuervo/IMG-20260310-WA0038.JPG","..//Imagenes/cuervo/IMG-20260310-WA0039.jpg","..//Imagenes/cuervo/IMG-20260310-WA0040.jpg","..//Imagenes/cuervo/IMG-20260310-WA0041.jpg","..//Imagenes/cuervo/IMG-20260310-WA0042.jpg","..//Imagenes/cuervo/IMG-20260310-WA0043.jpg","..//Imagenes/cuervo/IMG-20260310-WA0044.jpg","..//Imagenes/cuervo/IMG-20260310-WA0045.jpg","..//Imagenes/cuervo/IMG-20260310-WA0046.jpg"]
+  }
+]  
