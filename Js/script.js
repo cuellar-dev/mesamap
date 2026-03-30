@@ -12,6 +12,22 @@ const leyendaBoton = document.getElementById('leyenda-boton');
 const leyendaPanel = document.getElementById('leyenda-panel');
 const leyendaLista = document.getElementById('leyenda-lista');
 const cerrarLeyendaBoton = document.getElementById('cerrar-leyenda');
+
+// Intersection Observer para Lazy Loading en Backgrounds
+const lazyImageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const el = entry.target;
+            const bg = el.getAttribute('data-bg-lazy');
+            if (bg) {
+                el.style.backgroundImage = bg;
+                el.removeAttribute('data-bg-lazy');
+            }
+            observer.unobserve(el);
+        }
+    });
+}, { rootMargin: '100px 0px', threshold: 0.05 });
+
 const iconosSVG = {
     'restaurante': `<svg class="icono-pin" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#181818" stroke-width="1.80" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-utensils-icon lucide-utensils"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>`,
     'bar': `<svg class="icono-pin" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#181818" stroke-width="1.80" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-martini-icon lucide-martini"><path d="M8 22h8"/><path d="M12 11v11"/><path d="m19 3-7 8-7-8Z"/></svg>`,
@@ -220,7 +236,8 @@ function renderizarSugerencias(localesCercanos) {
         const imagenDiv = document.createElement('div');
         imagenDiv.className = 'imagen-local-int';
         if (local.imagen) {
-            imagenDiv.style.backgroundImage = `linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.5) 68%, rgba(0, 0, 0, 0.75) 80%, rgba(0, 0, 0, 0.87) 87%, rgb(0, 0, 0) 100%), url('${local.imagen}')`;
+            imagenDiv.setAttribute('data-bg-lazy', `linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.5) 68%, rgba(0, 0, 0, 0.75) 80%, rgba(0, 0, 0, 0.87) 87%, rgb(0, 0, 0) 100%), url('${local.imagen}')`);
+            lazyImageObserver.observe(imagenDiv);
         }
         
         const nombre = document.createElement('p');
@@ -647,7 +664,7 @@ function renderResultados(resultados, avisoFiltrosActivo = false) {
             const li = document.createElement('li');
             li.className = 'li-busqueda';
             li.innerHTML = `
-                <div class="imagen-busqueda" style="background-image: url(${local.imagen ? local.imagen : ''})"></div>
+                <div class="imagen-busqueda" data-bg-lazy="url(${local.imagen ? local.imagen : ''})"></div>
                 <div class="informacion-busqueda">
                     <h3 class="h3-busqueda">${local.nombre}</h3>
                     <p class="description-busqueda">${local.descripcion || ''}</p>
@@ -658,6 +675,9 @@ function renderResultados(resultados, avisoFiltrosActivo = false) {
                 cerrarBusqueda();
             });
             ulBusqueda.appendChild(li);
+            
+            const imgBusqueda = li.querySelector('.imagen-busqueda');
+            if (imgBusqueda && local.imagen) lazyImageObserver.observe(imgBusqueda);
         });
     }
 
@@ -727,7 +747,7 @@ function renderResultadosCalles(resultados, textoBuscado, avisoFiltrosActivo = f
             const li = document.createElement('li');
             li.className = 'li-busqueda-calles';
             li.innerHTML = `
-                <div class="imagen-busqueda-calle" style="background-image: url(${local.imagen || ''})"></div>
+                <div class="imagen-busqueda-calle" data-bg-lazy="url(${local.imagen || ''})"></div>
                 <div class="informacion-busqueda-calle">
                     <h3 class="h3-busqueda-calle">${local.nombre}</h3>
                     <p class="description-busqueda-calle">${local.direccion || ''}</p>
@@ -738,6 +758,9 @@ function renderResultadosCalles(resultados, textoBuscado, avisoFiltrosActivo = f
                 cerrarBusquedaCalles();
             });
             ulBusquedaCalles.appendChild(li);
+            
+            const imgBusquedaCalle = li.querySelector('.imagen-busqueda-calle');
+            if (imgBusquedaCalle && local.imagen) lazyImageObserver.observe(imgBusquedaCalle);
         });
     }
 
@@ -894,7 +917,7 @@ function mostrarInfoEnPanel(local) {
                 local.imagenes.forEach((imgSrc) => {
                     const slideDiv = document.createElement('div');
                     slideDiv.className = 'slide';
-                    slideDiv.style.backgroundImage = `url(${imgSrc})`;
+                    slideDiv.setAttribute('data-bg-lazy', `url(${imgSrc})`);
                     galeriaTrack.appendChild(slideDiv);
                     slide.push(slideDiv);
                 });
@@ -1142,6 +1165,15 @@ function galeriaOrdenar() {
             elSlide.classList.add('oculta-izq');    // Esperando lejos a la izquierda
         } else if (dist > 1) {
             elSlide.classList.add('oculta-der');    // Esperando lejos a la derecha
+        }
+
+        // Lazy Loading para las imágenes visibles y las adyacentes (hasta 2 de distancia)
+        if (dist >= -2 && dist <= 2) {
+            const lazyBg = elSlide.getAttribute('data-bg-lazy');
+            if (lazyBg) {
+                elSlide.style.backgroundImage = lazyBg;
+                elSlide.removeAttribute('data-bg-lazy');
+            }
         }
     });
 }
